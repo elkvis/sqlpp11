@@ -32,7 +32,6 @@
 #include <sqlpp11/data_types/integral.h>
 #include <sqlpp11/data_types/unsigned_integral.h>
 #include <sqlpp11/data_types/floating_point.h>
-#include <sqlpp11/data_types/decimal.h>
 #include <sqlpp11/data_types/text.h>
 #include <sqlpp11/data_types/day_point.h>
 #include <sqlpp11/data_types/time_of_day.h>

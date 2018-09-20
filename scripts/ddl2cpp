@@ -235,6 +235,9 @@ types = {
     'varchar': 'varchar',
     'character varying': 'varchar', #PostgreSQL
     'text': 'text',
+    'mediumtext': 'text',
+    'tinytext': 'text',
+    'longtext': 'text',
     'clob': 'text',
     'tinyblob': 'blob',
     'blob': 'blob',
@@ -242,13 +245,17 @@ types = {
     'longblob': 'blob',
     'bool': 'boolean',
     'boolean': 'boolean',
+    'decimal': 'floating_point',
+    'decimal unsigned': 'floating_point',
     'double': 'floating_point',
+    'double unsigned': 'floating_point',
     'float8': 'floating_point', # PostgreSQL
     'float': 'floating_point',
     'float4': 'floating_point', # PostgreSQL
     'numeric': 'floating_point', # PostgreSQL
     'date': 'day_point',
     'datetime': 'time_point',
+    'time': 'time_point',
     'time without time zone': 'time_point', # PostgreSQL
     'time with time zone': 'time_point', # PostgreSQL
     'timestamp': 'time_point',
