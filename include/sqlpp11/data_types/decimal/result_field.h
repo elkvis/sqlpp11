@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017, Roland Bock, Aaron Bishop
+ * Copyright (c) 2013-2015, Roland Bock
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -24,19 +24,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SQLPP11_DATA_TYPES_H
-#define SQLPP11_DATA_TYPES_H
+#ifndef SQLPP11_DATA_TYPES_FLOATING_POINT_RESULT_FIELD_H
+#define SQLPP11_DATA_TYPES_FLOATING_POINT_RESULT_FIELD_H
 
-#include <sqlpp11/data_types/blob.h>
-#include <sqlpp11/data_types/boolean.h>
-#include <sqlpp11/data_types/integral.h>
-#include <sqlpp11/data_types/unsigned_integral.h>
-#include <sqlpp11/data_types/floating_point.h>
-#include <sqlpp11/data_types/decimal.h>
-#include <sqlpp11/data_types/text.h>
-#include <sqlpp11/data_types/day_point.h>
-#include <sqlpp11/data_types/time_of_day.h>
-#include <sqlpp11/data_types/time_point.h>
-#include <sqlpp11/data_types/no_value.h>
+#include <sqlpp11/exception.h>
+#include <sqlpp11/result_field.h>
+#include <sqlpp11/result_field_base.h>
+#include <sqlpp11/type_traits.h>
+#include <sqlpp11/data_types/decimal/data_type.h>
+#include <sqlpp11/field_spec.h>
 
+namespace sqlpp
+{
+  template <typename Db, typename NameType, bool CanBeNull, bool NullIsTrivialValue>
+  struct result_field_t<Db, field_spec_t<NameType, decimal, CanBeNull, NullIsTrivialValue>>
+      : public result_field_base<Db, field_spec_t<NameType, decimal, CanBeNull, NullIsTrivialValue>>
+  {
+    template <typename Target>
+    void _bind(Target& target, size_t index)
+    {
+      target._bind_decimal_result(index, &this->_value, &this->_is_null);
+    }
+
+    template <typename Target>
+    void _post_bind(Target& target, size_t index)
+    {
+      target._post_bind_decimal_result(index, &this->_value, &this->_is_null);
+    }
+  };
+}  // namespace sqlpp
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017, Roland Bock, Aaron Bishop
+ * Copyright (c) 2013-2015, Roland Bock
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -24,19 +24,56 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SQLPP11_DATA_TYPES_H
-#define SQLPP11_DATA_TYPES_H
+#ifndef SQLPP11_DATA_TYPES_FLOATING_POINT_OPERAND_H
+#define SQLPP11_DATA_TYPES_FLOATING_POINT_OPERAND_H
 
-#include <sqlpp11/data_types/blob.h>
-#include <sqlpp11/data_types/boolean.h>
-#include <sqlpp11/data_types/integral.h>
-#include <sqlpp11/data_types/unsigned_integral.h>
-#include <sqlpp11/data_types/floating_point.h>
-#include <sqlpp11/data_types/decimal.h>
-#include <sqlpp11/data_types/text.h>
-#include <sqlpp11/data_types/day_point.h>
-#include <sqlpp11/data_types/time_of_day.h>
-#include <sqlpp11/data_types/time_point.h>
-#include <sqlpp11/data_types/no_value.h>
+#include <sqlpp11/type_traits.h>
+#include <sqlpp11/alias_operators.h>
+#include <sqlpp11/serializer.h>
 
+namespace sqlpp
+{
+  struct decimal_operand : public alias_operators<decimal_operand>
+  {
+    using _traits = make_traits<decimal, tag::is_expression, tag::is_wrapped_value>;
+    using _nodes = detail::type_vector<>;
+    using _is_aggregate_expression = std::true_type;
+
+    using _value_t = double;
+
+    decimal_operand() : _t{}
+    {
+    }
+
+    decimal_operand(_value_t t) : _t(t)
+    {
+    }
+
+    decimal_operand(const decimal_operand&) = default;
+    decimal_operand(decimal_operand&&) = default;
+    decimal_operand& operator=(const decimal_operand&) = default;
+    decimal_operand& operator=(decimal_operand&&) = default;
+    ~decimal_operand() = default;
+
+    bool _is_trivial() const
+    {
+      return _t == 0;
+    }
+
+    _value_t _t;
+  };
+
+  template <typename Context>
+  struct serializer_t<Context, decimal_operand>
+  {
+    using _serialize_check = consistent_t;
+    using Operand = decimal_operand;
+
+    static Context& _(const Operand& t, Context& context)
+    {
+      context << t._t;
+      return context;
+    }
+  };
+}  // namespace sqlpp
 #endif
